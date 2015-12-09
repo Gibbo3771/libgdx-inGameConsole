@@ -105,6 +105,14 @@ public class Console implements Disposable {
 	public Console () {
 		this(new Skin(Gdx.files.classpath("default_skin/uiskin.json")));
 	}
+	
+	/**
+	 * Creates a new console using the default skin and the given title
+	 * @param title The title visible for the console
+	 */
+	public Console (String title) {
+		this(new Skin(Gdx.files.classpath("default_skin/uiskin.json")), true, title);
+	}
 
 	/** Creates the console.<br>
 	 * <b>***IMPORTANT***</b> Call {@link Console#dispose()} to make your {@link InputProcessor} the default processor again (this
@@ -131,6 +139,17 @@ public class Console implements Disposable {
 	 * @param useMultiplexer If internal multiplexer should be used
 	 * @see Console#dispose() */
 	public Console (Skin skin, boolean useMultiplexer) {
+		this(skin, useMultiplexer, "Console");
+	}
+	
+	/** Creates the console.<br>
+	 * <b>***IMPORTANT***</b> Call {@link Console#dispose()} to make your {@link InputProcessor} the default processor again (this
+	 * console uses a multiplexer to circumvent it).
+	 * @param skin Uses skins for Label, TextField, and Table. Skin <b>must</b> contain a font called 'default-font'.
+	 * @param title The consoles title
+	 * @param useMultiplexer If internal multiplexer should be used
+	 * @see Console#dispose() */
+	public Console (Skin skin, boolean useMultiplexer, String title) {
 		stage = new Stage();
 		log = new Log();
 		display = new ConsoleDisplay(skin);
@@ -147,7 +166,7 @@ public class Console implements Disposable {
 		display.padTop(22);
 		display.setFillParent(true);
 
-		consoleWindow = new Window("Console", skin);
+		consoleWindow = new Window(title, skin);
 		consoleWindow.setMovable(true);
 		consoleWindow.setResizable(true);
 		consoleWindow.setKeepWithinStage(true);
@@ -160,6 +179,7 @@ public class Console implements Disposable {
 		setSizePercent(50, 50);
 		setPositionPercent(50, 50);
 	}
+
 
 	/** @param numEntries maximum number of entries the console will hold. */
 	public void setMaxEntries (int numEntries) {
