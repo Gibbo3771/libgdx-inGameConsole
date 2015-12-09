@@ -15,14 +15,14 @@ package com.strongjoshua.console;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.strongjoshua.console.Console.LogLevel;
+import com.strongjoshua.console.Console.LogTypes;
 
 class LogEntry {
 	private String text;
-	private LogLevel level;
+	private LogTypes level;
 	private long timeStamp;
 	
-	protected LogEntry(String msg, LogLevel level) {
+	protected LogEntry(String msg, LogTypes level) {
 		this.text = msg;
 		this.level = level;
 		timeStamp = TimeUtils.millis();
@@ -34,7 +34,7 @@ class LogEntry {
 	
 	protected String toConsoleString() {
 		String r = "";
-		if(level.equals(LogLevel.COMMAND))
+		if(level.equals(LogTypes.COMMAND))
 			r += level.getIdentifier();
 		r += text;
 		return r;

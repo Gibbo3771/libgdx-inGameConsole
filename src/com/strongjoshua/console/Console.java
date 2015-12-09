@@ -48,7 +48,7 @@ public class Console implements Disposable {
 	 * the entry when the log entries are printed to a file with {@link Console#printLogToFile(String)}.
 	 * 
 	 * @author StrongJoshua */
-	public enum LogLevel {
+	public enum LogTypes {
 		/** The default log level. Prints in white to the console and has no special indicator in the log file.<br>
 		 * Intentional Use: debugging. */
 		DEFAULT(new Color(1, 1, 1, 1), ""),
@@ -65,7 +65,7 @@ public class Console implements Disposable {
 		private Color color;
 		private String identifier;
 
-		LogLevel (Color c, String identity) {
+		LogTypes (Color c, String identity) {
 			this.color = c;
 			identifier = identity;
 		}
@@ -249,7 +249,7 @@ public class Console implements Disposable {
 		appInput = Gdx.input.getInputProcessor();
 		if (appInput != null) {
 			if (hasStage(appInput)) {
-				log("Console already added to input processor!", LogLevel.ERROR);
+				log("Console already added to input processor!", LogTypes.ERROR);
 				Gdx.app.log("Console", "Already added to input processor!");
 				return;
 			}
@@ -319,9 +319,9 @@ public class Console implements Disposable {
 
 	/** Logs a new entry to the console.
 	 * @param msg The message to be logged.
-	 * @param level The {@link LogLevel} of the log entry.
-	 * @see LogLevel */
-	public void log (String msg, LogLevel level) {
+	 * @param level The {@link LogTypes} of the log entry.
+	 * @see LogTypes */
+	public void log (String msg, LogTypes level) {
 		log.addEntry(msg, level);
 		display.refresh();
 
@@ -330,12 +330,12 @@ public class Console implements Disposable {
 		}
 	}
 
-	/** Logs a new entry to the console using {@link LogLevel#DEFAULT}.
+	/** Logs a new entry to the console using {@link LogTypes#DEFAULT}.
 	 * @param msg The message to be logged.
-	 * @see LogLevel
-	 * @see Console#log(String, LogLevel) */
+	 * @see LogTypes
+	 * @see Console#log(String, LogTypes) */
 	public void log (String msg) {
-		this.log(msg, LogLevel.DEFAULT);
+		this.log(msg, LogTypes.DEFAULT);
 	}
 
 	/** Prints all log entries to the given file. Log entries include logs in the code and commands made from within in the console
@@ -359,9 +359,9 @@ public class Console implements Disposable {
 	 *           <code>internal</code> FileHandles cannot be written to. */
 	public void printLogToFile (FileHandle fh) {
 		if (log.printToFile(fh))
-			log("Successfully wrote logs to file.", LogLevel.SUCCESS);
+			log("Successfully wrote logs to file.", LogTypes.SUCCESS);
 		else
-			log("Unable to write logs to file.", LogLevel.ERROR);
+			log("Unable to write logs to file.", LogTypes.ERROR);
 	}
 
 	/** @return If the console is disabled.
@@ -408,7 +408,7 @@ public class Console implements Disposable {
 	}
 
 	private void execCommand (String command) {
-		log(command, LogLevel.COMMAND);
+		log(command, LogTypes.COMMAND);
 
 		String[] parts = command.split(" ");
 		String methodName = parts[0];
@@ -447,7 +447,7 @@ public class Console implements Disposable {
 			if (methods[i].getName().equalsIgnoreCase(methodName)) possible.add(i);
 		}
 		if (possible.size <= 0) {
-			log("No such method found.", LogLevel.ERROR);
+			log("No such method found. Try using 'help'.", LogTypes.ERROR);
 			return;
 		}
 		int size = possible.size;
@@ -468,12 +468,12 @@ public class Console implements Disposable {
 						msg = "Unknown Error";
 						e.printStackTrace();
 					}
-					log(msg, LogLevel.ERROR);
+					log(msg, LogTypes.ERROR);
 					return;
 				}
 			}
 		}
-		log("Bad parameters. Check your code.", LogLevel.ERROR);
+		log("Bad parameters. Check your code.", LogTypes.ERROR);
 	}
 
 	private Vector3 stageCoords = new Vector3();
@@ -532,7 +532,7 @@ public class Console implements Disposable {
 				if (labels.size > i) {
 					l = labels.get(i);
 				} else {
-					l = new Label("", skin, "default-font", LogLevel.DEFAULT.getColor());
+					l = new Label("", skin, "default-font", LogTypes.DEFAULT.getColor());
 					l.setWrap(true);
 					labels.add(l);
 				}
@@ -581,7 +581,7 @@ public class Console implements Disposable {
 					execCommand(s);
 				} else
 					log("No command executor has been set. Please call setCommandExecutor for this console in your code and restart.",
-						LogLevel.ERROR);
+						LogTypes.ERROR);
 				input.setText("");
 				return true;
 			} else if (keycode == Keys.UP && !hidden) {
