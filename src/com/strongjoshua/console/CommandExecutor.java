@@ -18,14 +18,18 @@ import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.Method;
 
 /**
- * Extend this class (child must be <code>public</code>) and fill it with methods (also <code>public</code>) that you wish to have work with
- * the {@link Console}. Then call {@link Console#setCommandExecutor(CommandExecutor)}.<br>
+ * Extend this class (child must be <code>public</code>) and fill it with
+ * methods (also <code>public</code>) that you wish to have work with the
+ * {@link Console}. Then call
+ * {@link Console#setCommandExecutor(CommandExecutor)}.<br>
  * <br>
  * <b>Notes</b><br>
  * <ul>
- * <li>Arguments <i><b>must</b></i> be primitive types (the only exception being {@link String}).</li>
- * <li>No two methods, of the same name, can have the same number of parameters. Make multiple methods with more specific names if they
- * must have the same number of parameters.</li>
+ * <li>Arguments <i><b>must</b></i> be primitive types (the only exception being
+ * {@link String}).</li>
+ * <li>No two methods, of the same name, can have the same number of parameters.
+ * Make multiple methods with more specific names if they must have the same
+ * number of parameters.</li>
  * <li>Methods are case-<b>insensitive</b> when invoked from the console.</li>
  * </ul>
  * 
@@ -40,7 +44,9 @@ public abstract class CommandExecutor {
 
 	/**
 	 * Prints the log to a local file.
-	 * @param path The relative path of the local file to print to.
+	 * 
+	 * @param path
+	 *            The relative path of the local file to print to.
 	 */
 	public final void printLog(String path) {
 		console.printLogToFile(path);
@@ -59,20 +65,21 @@ public abstract class CommandExecutor {
 	public final void help() {
 		Method[] methods = ClassReflection.getDeclaredMethods(this.getClass());
 		String s = "";
-		for(int j = 0; j < methods.length; j++) {
+		for (int j = 0; j < methods.length; j++) {
 			Method m = methods[j];
-			if(m.isPublic()) {
-				s += m.getName();
-				s += " : ";
+			if (!m.isPublic())
+				continue;
+			s += m.getName();
+			s += " : ";
 
-				Class<?>[] params = m.getParameterTypes();
-				for(int i = 0; i < params.length; i++) {
-					s += params[i].getSimpleName();
-					if(i < params.length - 1)
-						s += ", ";
-				}
+			Class<?>[] params = m.getParameterTypes();
+			for (int i = 0; i < params.length; i++) {
+				s += params[i].getSimpleName();
+				if (i < params.length - 1)
+					s += ", ";
 			}
-			if(j < methods.length - 1)
+
+			if (j < methods.length - 1)
 				s += "\n";
 		}
 

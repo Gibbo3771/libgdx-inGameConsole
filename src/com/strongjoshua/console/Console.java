@@ -87,6 +87,7 @@ public class Console implements Disposable {
 	private Log log;
 	private ConsoleDisplay display;
 	private boolean hidden = true;
+	private boolean alwaysVisible = false;
 	private boolean usesMultiplexer = false;
 	private InputProcessor appInput;
 	private InputMultiplexer multiplexer;
@@ -354,6 +355,15 @@ public class Console implements Disposable {
 		if (disabled && !hidden) ((KeyListener)display.getListeners().get(0)).keyDown(null, keyID);
 		this.disabled = disabled;
 	}
+	
+	/** @param alwaysVisible True if the console should always be visible and active */
+	public void setAlwaysVisible(boolean alwaysVisible){
+		this.alwaysVisible = alwaysVisible;
+		if(!alwaysVisible) return;
+		stage.setKeyboardFocus(display.input);
+		consoleWindow.setTouchable(Touchable.childrenOnly);
+		hidden = !alwaysVisible;
+	}
 
 	/** Gets the console's display key. If the console is enabled, the console will be shown upon this key being pressed.<br>
 	 * Default key is <b>`</b> a.k.a. '<b>backtick</b>'.
@@ -571,7 +581,7 @@ public class Console implements Disposable {
 				input.setText(commandCompleter.next());
 				input.setCursorPosition(input.getText().length());
 				return true;
-			} else if (keycode == keyID) {
+			} else if (!alwaysVisible && keycode == keyID) {
 				hidden = !hidden;
 				if (hidden) {
 					input.setText("");
